@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  app:
+    image: template/php:1.0
+    build:
+      context: .
+      dockerfile: ./.devcontainer/app/Dockerfile
+    container_name: php-template
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - 8080:80

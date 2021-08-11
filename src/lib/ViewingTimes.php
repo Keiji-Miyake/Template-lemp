@@ -1,4 +1,3 @@
-
 <?php
 
 const SPLIT_LENGTH = 2;
@@ -12,43 +11,43 @@ function getInput(array $argv): array
 
 function groupChannelViewingPeriods(array $inputs): array
 {
-    $channelViewingPeriods = [];
+    $chViewingPeriods = [];
     foreach ($inputs as $input) {
         $chan = $input[0];
         $min = $input[1];
         $mins = [$min];
 
-        if (array_key_exists($chan, $channelViewingPeriods)) {
-            $mins = array_merge($channelViewingPeriods[$chan], $mins);
+        if (array_key_exists($chan, $chViewingPeriods)) {
+            $mins = array_merge($chViewingPeriods[$chan], $mins);
         }
 
-        $channelViewingPeriods[$chan] = $mins;
+        $chViewingPeriods[$chan] = $mins;
     }
-    return $channelViewingPeriods;
+    return $chViewingPeriods;
 }
 
-function calculateTotalHour(array $channelViewingPeriods): float
+function calculateTotalHour(array $chViewingPeriods): float
 {
     $viewingTimes = [];
-    foreach ($channelViewingPeriods as $period) {
+    foreach ($chViewingPeriods as $period) {
         $viewingTimes = array_merge($viewingTimes, $period);
     }
     $totalMin = array_sum($viewingTimes);
 
-    // array_sum(array_merge(...$channelViewingPeriods));
+    // array_sum(array_merge(...$chViewingPeriods));
 
     return round($totalMin / 60, 1);
 }
 
-function display(array $channelViewingPeriods): void
+function display(array $chViewingPeriods): void
 {
-    $totalHour = calculateTotalHour($channelViewingPeriods);
+    $totalHour = calculateTotalHour($chViewingPeriods);
     echo $totalHour . PHP_EOL;
-    foreach ($channelViewingPeriods as $chan => $mins) {
+    foreach ($chViewingPeriods as $chan => $mins) {
         echo $chan . ' ' . array_sum($mins) . ' ' . count($mins) . PHP_EOL;
     }
 }
 
 $inputs = getInput($_SERVER['argv']);
-$channelViewingPeriods = groupChannelViewingPeriods($inputs);
-display($channelViewingPeriods);
+$chViewingPeriods = groupChannelViewingPeriods($inputs);
+display($chViewingPeriods);
