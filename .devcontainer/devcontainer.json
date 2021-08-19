@@ -1,18 +1,22 @@
 {
-  "name": "PHP-Template",
+  "name": "PHP Template",
   "dockerComposeFile": [
     "../docker-compose.yml",
   ],
-  "service": "ap",
+  "service": "app",
   "workspaceFolder": "/var/www/html",
   "forwardPorts": [
     9003
   ],
   "extensions": [
     "felixfbecker.php-debug",
+    "felixfbecker.php-intellisense",
     "bmewburn.vscode-intelephense-client",
     "coenraads.bracket-pair-colorizer-2",
     "oderwat.indent-rainbow",
     "streetsidesoftware.code-spell-checker"
-  ]
+  ],
+  "settings": {
+    "editor.tabSize": 2,
+  },
 }

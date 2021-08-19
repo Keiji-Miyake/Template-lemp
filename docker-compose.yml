@@ -6,8 +6,25 @@ services:
     build:
       context: .
       dockerfile: ./.devcontainer/app/Dockerfile
-    container_name: php-template
+    container_name: php_template_app
     volumes:
       - ./src:/var/www/html
     ports:
       - 8080:80
+    depends_on: 
+      - db
+  phpdoc:
+    image: phpdoc/phpdoc
+    container_name: php_template_phpdoc
+    volumes:
+      - ./src:/data
+  db:
+    image: postgres:13.4-alpine
+    container_name: php_template_db
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - HOGE=hoge
