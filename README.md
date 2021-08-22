@@ -3,5 +3,5 @@
 ## phpdocumentor
 
 ```shell
-docker-compose run --rm phpdoc run -f sample.php -t ./docs
+docker-compose run --rm phpdoc run --ignore "vendor/, tests/"
 ```

@@ -2,25 +2,31 @@ version: "3.9"
 
 services:
   app:
-    image: template/php:1.0
-    build:
-      context: .
-      dockerfile: ./.devcontainer/app/Dockerfile
     container_name: php_template_app
+    image: template/php8-apache:1.0
+    build:
+      context: ../
+      dockerfile: .devcontainer/app/Dockerfile
+      args:
+        - UID=$UID
+        - GID=$GID
     volumes:
-      - ./src:/var/www/html
+      - ../src:/var/www/html
     ports:
       - 8080:80
     depends_on: 
       - db
   phpdoc:
-    image: phpdoc/phpdoc
     container_name: php_template_phpdoc
+    image: template/phpdoc
+    build:
+      context: ../
+      dockerfile: .devcontainer/phpdocumentor/Dockerfile
     volumes:
-      - ./src:/data
+      - ../src:/data
   db:
-    image: postgres:13.4-alpine
     container_name: php_template_db
+    image: postgres:13.4-alpine
     expose:
       - 5432
     environment:
