@@ -1,4 +1,14 @@
+node_modules/
 vendor/
+src/docs
+.env
+.env.buckup
 .phpunit.result.cache
 .phpdoc/
-docs/
+docker-compose.override.yml
+npm-debug.log
+yarn-error.log
+.idea
+.vscode
+
+.DS_Store
