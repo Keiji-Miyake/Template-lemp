@@ -1,14 +1,13 @@
 version: "3.9"
 
 volumes:
-  php-fpm-socket:
   mysql-store:
 services:
   app:
     container_name: php_template_app
     image: template/php8-fpm:1.0
     build:
-      context: ./
+      context: .devcontainer/
       dockerfile: ./app/Dockerfile
       args:
         - UID=$UID
@@ -19,38 +18,38 @@ services:
     tty: true
     working_dir: '/var/www'
     volumes:
-      - php-fpm-socket:/var/run/php-fpm
-      - ./app/php.ini:/usr/local/etc/php/php.ini
-      - ./app/xdebug.ini:/usr/local/etc/php/xdebug.ini
-      - ../src:/var/www
+      - .devcontainer/app/php.ini:/usr/local/etc/php/php.ini
+      - .devcontainer/app/xdebug.ini:/usr/local/etc/php/xdebug.ini
+      - ./src:/var/www
     depends_on: 
       - db
   phpdoc:
     container_name: php_template_phpdoc
     image: template/phpdoc:1.0
     build:
-      context: ./
+      context: .devcontainer/
       dockerfile: ./phpdocumentor/Dockerfile
     volumes:
-      - ../src:/data
+      - ./src:/data
+
   web:
     container_name: php_template_nginx
     image: template/nginx:1.0
     build:
-      context: ./
+      context: .devcontainer/
       dockerfile: ./nginx/Dockerfile
     ports:
       - 8080:80
     depends_on:
       - app
     volumes:
-      - php-fpm-socket:/var/run/php-fpm
-      - ../src:/var/www
+      - .devcontainer/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./src:/var/www
   db:
     container_name: php_template_db
     image: template/mysql:1.0
     build:
-      context: ./
+      context: .devcontainer
       dockerfile: ./mysql/Dockerfile
     expose:
       - 3306
@@ -66,3 +65,9 @@ services:
         target: /var/lib/mysql
         volume:
           nocopy: true
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: 'db'
+    ports:
+    - 8081:80

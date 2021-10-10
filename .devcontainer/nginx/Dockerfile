@@ -6,7 +6,7 @@ LABEL maintainer="k.miyake01+dev@gmail.com"
 LABEL version="1.0"
 LABEL description="PHP Template app"
 
-ENV TZ=UTC
+ENV TZ=Asia/Tokyo
 
 RUN apk update && \
   apk add --update --no-cache --virtual=.build-dependencies g++
