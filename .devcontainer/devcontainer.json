@@ -1,10 +1,10 @@
 {
   "name": "PHP Template",
   "dockerComposeFile": [
-    "../docker-compose.yml",
+    "./docker-compose.yml",
   ],
   "service": "app",
-  "workspaceFolder": "/var/www/html",
+  "workspaceFolder": "/var/www",
   "forwardPorts": [
     9003
   ],

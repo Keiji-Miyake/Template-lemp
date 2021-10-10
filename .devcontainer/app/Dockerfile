@@ -1,24 +1,28 @@
-FROM php:8-apache
-
+FROM php:8.0-fpm-buster
+SHELL ["/bin/bash", "-oeux", "pipefail", "-c"]
+ 
 # メタ情報の付与
 LABEL maintainer="k.miyake01+dev@gmail.com"
 LABEL version="1.0"
 LABEL description="PHP Template app"
 
-ARG USERNAME
-ARG UID
-ARG GID
+ENV COMPOSER_ALLOW_SUPERUSER=1 \
+  COMPOSER_HOME=/composer
+ 
+COPY --from=composer:2.0 /usr/bin/composer /usr/bin/composer
 
 # PHP で必要なライブラリをインストール
 RUN apt-get update && apt-get install -y \
+    git \
     tzdata \
-    libpq-dev \
     zip unzip \
-  && docker-php-ext-install pdo_pgsql \
+    libzip-dev \
+    libicu-dev \
+    libonig-dev \
+  && docker-php-ext-install intl pdo_mysql zip bcmath mbstring \
   && pecl install xdebug \
-  && rm -rf /var/lib/apt/lists/* \
-  && usermod -u $UID www-data \
-  && groupmod -g $GID www-data
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* 
 
 ENV TZ=Asia/Tokyo
 
@@ -27,9 +31,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
 # ファイルのコピー
-COPY ./src /var/www/html
-COPY .devcontainer/app/php.ini /usr/local/etc/php/php.ini
-COPY .devcontainer/app/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+COPY ./app/php.ini /usr/local/etc/php/php.ini
+COPY ./app/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
-WORKDIR /var/www/html
-USER www-data
+WORKDIR /var/www

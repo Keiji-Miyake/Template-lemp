@@ -1,3 +1,7 @@
+# PHP Template
+
+Linter や Formmatter の実行方法
+
 ## PHP MD Install
 
 ```txt ./composer.json

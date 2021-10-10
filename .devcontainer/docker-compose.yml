@@ -1,36 +1,68 @@
 version: "3.9"
 
+volumes:
+  php-fpm-socket:
+  mysql-store:
 services:
   app:
     container_name: php_template_app
-    image: template/php8-apache:1.0
+    image: template/php8-fpm:1.0
     build:
-      context: ../
-      dockerfile: .devcontainer/app/Dockerfile
+      context: ./
+      dockerfile: ./app/Dockerfile
       args:
         - UID=$UID
         - GID=$GID
-    volumes:
-      - ../src:/var/www/html
     ports:
-      - 8080:80
+      - 8000:8000
+    stdin_open: true
+    tty: true
+    working_dir: '/var/www'
+    volumes:
+      - php-fpm-socket:/var/run/php-fpm
+      - ./app/php.ini:/usr/local/etc/php/php.ini
+      - ./app/xdebug.ini:/usr/local/etc/php/xdebug.ini
+      - ../src:/var/www
     depends_on: 
       - db
   phpdoc:
     container_name: php_template_phpdoc
-    image: template/phpdoc
+    image: template/phpdoc:1.0
     build:
-      context: ../
-      dockerfile: .devcontainer/phpdocumentor/Dockerfile
+      context: ./
+      dockerfile: ./phpdocumentor/Dockerfile
     volumes:
       - ../src:/data
+  web:
+    container_name: php_template_nginx
+    image: template/nginx:1.0
+    build:
+      context: ./
+      dockerfile: ./nginx/Dockerfile
+    ports:
+      - 8080:80
+    depends_on:
+      - app
+    volumes:
+      - php-fpm-socket:/var/run/php-fpm
+      - ../src:/var/www
   db:
     container_name: php_template_db
-    image: postgres:13.4-alpine
+    image: template/mysql:1.0
+    build:
+      context: ./
+      dockerfile: ./mysql/Dockerfile
     expose:
-      - 5432
+      - 3306
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - HOGE=hoge
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=develop
+      - MYSQL_USER=develop
+      - MYSQL_PASSWORD=develop
+      - TZ=Asia/Tokyo
+    volumes:
+      - type: volume
+        source: mysql-store
+        target: /var/lib/mysql
+        volume:
+          nocopy: true
