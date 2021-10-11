@@ -19,7 +19,10 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libicu-dev \
     libonig-dev \
-  && docker-php-ext-install intl pdo_mysql zip bcmath mbstring \
+    libpng-dev \
+    libfreetype6-dev \
+  && docker-php-ext-configure gd --with-freetype \
+  && docker-php-ext-install gd intl mysqli pdo_mysql zip bcmath mbstring \
   && pecl install xdebug \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* 
