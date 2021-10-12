@@ -7,7 +7,8 @@
         "phpunit/phpunit": "^9.5"
     },
     "scripts": {
-        "phpcs": "./vendor/bin/phpcs --standard=phpcs.xml",
+        "phpcs": "php -d memory_limit=-1 ./vendor/bin/phpcs --standard=phpcs.xml",
+        "phpcbf": "php -d memory_limit=-1 ./vendor/bin/phpcbf --standard=phpcs.xml",
         "phpmd": "./vendor/bin/phpmd . text phpmd.xml --suffixes php --exclude vendor",
         "phpstan": "./vendor/bin/phpstan analyse -c phpstan.neon",
         "phpunit": "./vendor/bin/phpunit"

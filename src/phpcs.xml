@@ -2,7 +2,8 @@
 <ruleset name="Custom PSR12">
     <description>A custom PSR12</description>
     <file>./</file>
-    <exclude-pattern>./vendor/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*.(inc|css|js)</exclude-pattern>
     <arg name="colors"/>
     <arg value="s"/>
     <rule ref="PSR12">
