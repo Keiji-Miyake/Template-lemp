@@ -1,5 +1,5 @@
 {
-  "name": "PHP Template",
+  "name": "Template LEMP",
   "dockerComposeFile": [
     "../docker-compose.yml",
   ],

@@ -1,39 +1,6 @@
-version: "3.9"
-
-volumes:
-  mysql-store:
 services:
-  app:
-    container_name: php_template_app
-    image: template/php8-fpm:1.0
-    build:
-      context: .devcontainer/
-      dockerfile: ./app/Dockerfile
-      args:
-        - UID=$UID
-        - GID=$GID
-    ports:
-      - 8000:8000
-    stdin_open: true
-    tty: true
-    working_dir: '/var/www'
-    volumes:
-      - .devcontainer/app/php.ini:/usr/local/etc/php/php.ini
-      - .devcontainer/app/xdebug.ini:/usr/local/etc/php/xdebug.ini
-      - ./src:/var/www
-    depends_on: 
-      - db
-  phpdoc:
-    container_name: php_template_phpdoc
-    image: template/phpdoc:1.0
-    build:
-      context: .devcontainer/
-      dockerfile: ./phpdocumentor/Dockerfile
-    volumes:
-      - ./src:/data
-
   web:
-    container_name: php_template_nginx
+    container_name: template_lemp_web
     image: template/nginx:1.0
     build:
       context: .devcontainer/
@@ -45,8 +12,42 @@ services:
     volumes:
       - .devcontainer/nginx/conf.d/:/etc/nginx/conf.d/
       - ./src:/var/www
+  app:
+    container_name: template_lemp_app
+    image: template/app:1.0
+    build:
+      context: .devcontainer/
+      dockerfile: ./app/Dockerfile
+      args:
+        - UID=$UID
+        - GID=$GID
+    ports:
+      - 8000:8000
+    stdin_open: true
+    tty: true
+    working_dir: "/var/www"
+    volumes:
+      - .devcontainer/app/php.ini:/usr/local/etc/php/php.ini
+      - .devcontainer/app/xdebug.ini:/usr/local/etc/php/xdebug.ini
+      - ./src:/var/www
+    depends_on:
+      - db
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: "db"
+    ports:
+      - 8081:80
+  phpdoc:
+    container_name: template_lemp_phpdoc
+    image: template/phpdoc:1.0
+    build:
+      context: .devcontainer/
+      dockerfile: ./phpdocumentor/Dockerfile
+    volumes:
+      - ./src:/data
   db:
-    container_name: php_template_db
+    container_name: template_lemp_db
     image: template/mysql:1.0
     build:
       context: .devcontainer
@@ -65,9 +66,5 @@ services:
         target: /var/lib/mysql
         volume:
           nocopy: true
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    environment:
-      PMA_HOST: 'db'
-    ports:
-    - 8081:80
+volumes:
+  mysql-store:

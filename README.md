@@ -1,12 +1,12 @@
-# PHP Template
+# Template LEMP
 
 ## Introduction
 
-```shwll
+```shell
 make
 ```
 
-## phpdocumentor
+## PHP Documenter
 
 ```shell
 docker-compose run --rm phpdoc run --ignore "vendor/, tests/"
